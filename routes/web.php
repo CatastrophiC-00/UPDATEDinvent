@@ -13,4 +13,4 @@
 
 
 Route::get('/','InventoryController@index');
-
+Route::post('/Inventory','InventoryController@store');

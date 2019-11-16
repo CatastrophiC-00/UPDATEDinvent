@@ -10,9 +10,12 @@
 <body><br>
   <center><h1>Inventory</h1></center>
 <!-- Button trigger modal -->
+<div id="app">
+<div class="container">
+<div style="text-align: right;">
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-  Launch demo modal
-</button></div>
+  Add Item
+</button></div><br>
   <table class="table">
   <thead class="thead-dark">
     <tr>
@@ -24,25 +27,11 @@
     </tr>
   </thead>
   <tbody>
-    @foreach($inventories as $inventory)
-    <tr>
+    <tr v-for="inventory in inventories">
       <td>
-       {{ $inventory->id }}
-      </td>
-      <td>
-        {{ $inventory->name }}
-      </td>
-       <td>
-        {{ $inventory->quantity }}
-      </td>
-       <td>
-        {{ $inventory->category }}
-      </td>
-      <td>
-        <a href="#">Edit</a> | <a href="#">Delete</a>
+
       </td>
     </tr>
-     @endforeach
   </tbody>
   </table>
 
@@ -58,22 +47,53 @@
       </div>
       <div class="modal-body">
       <label>Name:</label>
-      <input type="text" class='form-control' name="name">
+      <input type="text" class='form-control' v-model='new_item.name' name="name">
       <label>Quantity:</label>
-      <input type="number" class='form-control' name="quantity">
+      <input type="number" class='form-control' v-model='new_item.quantity'name="quantity">
       <label>Category:</label>
-      <select class='form-control' name="categry">
+      <select class='form-control' v-model='new_item.categry' name="categry">
         <option value="Utensil">Utensil</option>
         <option value="Equipment">Equipment</option>
       </select>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" href="">Save changes</button>
+        <button type="button" class="btn btn-primary" v-on:click="postNewItem" href="">Save changes</button>
       </div>
     </div>
   </div>
 </div>
-
+</div>
+</div>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    var inventories = @json($inventories);
+  </script>
+<script>
+var vm = new Vue({
+    el: '#app',
+    data: {
+      inventories: inventories,
+      new_item: {
+        id: 1,
+        name: '',
+        quantity: 1,
+        category: '',
+      }
+    },
+    methods: {
+      postNewItem(){
+        axios.post('/Inventory', this.new_item)
+        .then(({data})=>{
+              this.inventories.push(data);
+              this.new_item.name = '';
+              this.new_item.category = '';
+              console.log(data);
+            });
+      }
+    }
+})
+</script>
 </html>

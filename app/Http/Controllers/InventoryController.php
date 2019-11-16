@@ -11,5 +11,13 @@ class InventoryController extends Controller
     	$inventories = DB::table('inventory')->get();
     	return view('welcome')->with('inventories', $inventories);
     }
-    
+    public function store(Inventory $inventories)
+    {
+        $inventory = new Inventory;
+        $inventory->name = request()->name;
+        $inventory->quantity = request()->quantity;
+        $inventory->category = request()->category;
+        $inventory->save();
+    	return $inventory;
+    }
 }
